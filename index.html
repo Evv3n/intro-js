@@ -5,65 +5,105 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guess the number</title>
-    <script src="script.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <label for="guessField">Enter a guess: </label>
+    <div class="container">
+    <button data-text="Awesome" class="button">
+        <span class="actual-text">&nbsp;Guess the number 1-100&nbsp;</span>
+        <span class="hover-text" aria-hidden="true">&nbsp;Guess the number 1-100&nbsp;</span>
+    </button>
+    <center><label class="entertxt" for="guessField">Enter a guess: </label></center>
     <input type="number" id="guessField" class="guessField">
     <input type="submit" value="Submit guess" class="guessSubmit">
     <div class="resultParas">
-        <p class="guesses"></p>
+        <p class="guesses">Numbers guessed: </p>
         <p class="lastResult"></p>
-        <p class="lowOrHi"></p> 
+        <p class="lowOrHi"></p>
+        <p class="zero"></p> 
+        <p class="over"></p>
      </div>
+     <button id="reset">Reset</button>
+     <p class="resettxt"></p>
+    </div>
     <script>
         let randomNumber = Math.floor(Math.random() * 100) + 1;
 
         const guesses = document.querySelector('.guesses');
         const lastResult = document.querySelector('.lastResult');
         const lowOrHi = document.querySelector('.lowOrHi');
-
+        const zero = document.querySelector('.zero');
+        const over = document.querySelector('.over');
+        const resettxt = document.querySelector('.resettxt')
         const guessSubmit = document.querySelector('.guessSubmit');
         const guessField = document.querySelector('.guessField');
+        const reset = document.querySelector('#reset');
+        
 
         let guessCount = 1;
         let resetButton;
 
         function checkGuess() {
             const userGuess = Number(guessField.value);
+            
             if (guessCount === 1) {
-                guesses.textContent = 'Previous guesses: ';
+                guesses.textContent + guesses;
+            }
+            if (userGuess === 0) {
+                zero.textContent = userGuess + ' is not a viable number'
+
+            }
+            if (userGuess > 100) {
+                over.textContent = userGuess + ' is greater than 100'
             }
             guesses.textContent += `${userGuess} `;
-
-            if (userGuess === randomNumber) {
-                lastResult.textContent = 'Congratulations! You got it right!';
-                lastResult.style.color = 'green';
-                lowOrHi.textContent = '';  
-                setGameOver();  
+            if (guessCount < 10) {
+                guessCount++;
             } else if (guessCount === 10) {
-                lastResult.textContent = 'YOU USED UP ALL YOUR GUESSES';
+                lastResult.textContent = 'You used up all your guesses';
+                reset.style.visibility = "visible";
                 lowOrHi.textContent = '';
-                setGameOver();
+            }
+            if (userGuess === randomNumber) {
+                lastResult.textContent = 'Congrats, you guessd the correct number!';
+                reset.style.visibility = "visible";
+                lowOrHi.textContent = '';  
             } else {
-                lastResult.textContent = 'Wrong!';
-                lastResult.style.color = 'red';
                 if (userGuess < randomNumber) {
-                lowOrHi.textContent = 'Last guess was too low!';
+                lowOrHi.textContent = 'The number is higher!';
                 } else if (userGuess > randomNumber) {
-                lowOrHi.textContent = 'Last guess was too high!';
+                lowOrHi.textContent = 'The number is lower!';
                 }
             }
             
-            guessCount++;
+            
+            
             guessField.value = '';
             guessField.focus();
-                
-            }
+            } // end checkGuess func
+            
+            function restart() {
+                randomNumber = Math.floor(Math.random() * 100) + 1;
+                console.log('game has been reset')
+                guessCount = 1;
+                guesses.textContent = ''
+                lowOrHi.textContent = ''
+                lastResult.textContent = ''
+                zero.textContent = ' '
+                over.textContent = ''
+                resettxt.textContent = 'The game has been reset'
+            };
+            reset.addEventListener('click', restart);    
             guessSubmit.addEventListener('click', checkGuess);
+            
 
+            window.addEventListener('keyup', function(event){
+                if (event.key === 'Enter'){
+                    checkGuess()
+                }
+            });
 
+        
 
 
     </script>
