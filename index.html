@@ -18,6 +18,7 @@
     <input type="submit" value="Submit guess" class="guessSubmit">
     <div class="resultParas">
         <p class="guesses" id="guesses2">Numbers guessed: </p>
+        <p class="fail"></p>
         <p class="lastResult"></p>
         <p class="lowOrHi"></p>
         <p class="zero"></p> 
@@ -31,6 +32,7 @@
     <script>
         let randomNumber = Math.floor(Math.random() * 100) + 1;
         
+        const fail = document.querySelector('.fail')
         const empty = document.querySelector('.empty');
         const none = document.querySelector('.none');
         const guesses = document.querySelector('.guesses');
@@ -48,6 +50,8 @@
         let resetButton;
 
         function checkGuess() {
+            resettxt.textContent = ''
+            fail.textContent = ''
             over.textContent = ''
             zero.textContent = ''
             const userGuess = Number(guessField.value);
@@ -78,8 +82,10 @@
                 guessCount++;
             } else if (guessCount === 10) {
                 lastResult.textContent = 'You used up all your guesses';
+                fail.textContent = 'The number was ' + randomNumber;
                 reset.style.visibility = "visible";
                 lowOrHi.textContent = '';
+                restart()
             }
             
             
